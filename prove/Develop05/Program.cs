@@ -1,3 +1,4 @@
+// Made by Fernando
 ﻿using System;
 
 public class Goal
@@ -118,6 +119,7 @@ public class GoalTracker
 
     public void CreateGoal()
     {
+        //new goal
         Console.Write("Enter the name of the new goal: ");
         string name = Console.ReadLine();
 
@@ -271,7 +273,7 @@ class Program
         GoalTracker goalTracker = new GoalTracker();
         string filename = "";
 
-        // Here is the menu options
+        // Menu options
         Console.WriteLine("Welcome to the Goal Tracker program!");
         Console.WriteLine("Please choose an option:");
         Console.WriteLine("1. View goals and progress");
@@ -283,7 +285,7 @@ class Program
 
         while (true)
         {
-            
+            // Choices case
             Console.Write("\nEnter your choice (1-6): ");
             string input = Console.ReadLine();
 

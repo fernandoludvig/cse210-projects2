@@ -1,17 +1,22 @@
 // Made by Fernando
-﻿using System;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class Goal
 {
     public string Name { get; set; }
     public string Type { get; set; }
     public int ScoreValue { get; set; }
+    public DateTime Deadline { get; set; } // Added Deadline property
 
     public Goal(string name, string type, int scoreValue)
     {
         Name = name;
         Type = type;
         ScoreValue = scoreValue;
+        Deadline = DateTime.MaxValue; // Initialize to a default value
     }
 
     public virtual void TrackProgress() { }

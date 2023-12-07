@@ -1,0 +1,14 @@
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\bin\Debug\net7.0\FinalProject.exe
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\bin\Debug\net7.0\FinalProject.deps.json
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\bin\Debug\net7.0\FinalProject.runtimeconfig.json
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\bin\Debug\net7.0\FinalProject.dll
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\bin\Debug\net7.0\FinalProject.pdb
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.AssemblyInfoInputs.cache
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.AssemblyInfo.cs
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.csproj.CoreCompileInputs.cache
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.dll
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\refint\FinalProject.dll
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.pdb
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\FinalProject.genruntimeconfig.cache
+C:\Users\ferna\OneDrive\Área de Trabalho\cs211\cse210-projects2\cse210-projects2\final\FinalProject\obj\Debug\net7.0\ref\FinalProject.dll

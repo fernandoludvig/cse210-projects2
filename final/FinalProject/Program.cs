@@ -69,14 +69,58 @@ class Project
     }
 }
 
+// Base class representing a Notification
+abstract class Notification
+{
+    protected string Recipient { get; }
+
+    public Notification(string recipient)
+    {
+        Recipient = recipient;
+    }
+
+    public abstract void SendNotification();
+}
+
+// Derived class representing an Email Notification
+class EmailNotification : Notification
+{
+    public EmailNotification(string recipient) : base(recipient) { }
+
+    public override void SendNotification()
+    {
+        Console.WriteLine($"Sending email notification to {Recipient}.");
+        // Additional email notification logic can be added here
+    }
+}
+
+// Derived class representing an SMS Notification
+class SMSNotification : Notification
+{
+    public SMSNotification(string recipient) : base(recipient) { }
+
+    public override void SendNotification()
+    {
+        Console.WriteLine($"Sending SMS notification to {Recipient}.");
+        // Additional SMS notification logic can be added here
+    }
+}
+
 // Class representing a Reminder
 class Reminder
 {
     public string Message { get; set; }
+    public Notification Notification { get; set; }
 
-    public Reminder(string message)
+    public Reminder(string message, Notification notification)
     {
         Message = message;
+        Notification = notification;
+    }
+
+    public void SendNotification()
+    {
+        Notification.SendNotification();
     }
 }
 
@@ -92,6 +136,7 @@ class TaskManager
         reminders = new List<Reminder>();
     }
 
+
     public void AddTask(Task task)
     {
         tasks.Add(task);
@@ -100,6 +145,7 @@ class TaskManager
     public void AddReminder(Reminder reminder)
     {
         reminders.Add(reminder);
+        reminder.SendNotification(); // Send the notification when adding a reminder
     }
 
     public void DisplayAllTasks()
@@ -133,7 +179,7 @@ class TaskManager
         }
     }
 
-    public void MarkTaskAsCompleted(Task task)
+      public void MarkTaskAsCompleted(Task task, string userEmail)
     {
         task.IsCompleted = true;
         Console.WriteLine($"Task '{task.Title}' marked as completed.");
@@ -142,7 +188,8 @@ class TaskManager
         Task nearestIncompleteTask = FindNearestIncompleteTask();
         if (nearestIncompleteTask != null)
         {
-            AddReminder(new Reminder($"Upcoming deadline for task '{nearestIncompleteTask.Title}' on {nearestIncompleteTask.Deadline.ToShortDateString()}"));
+            EmailNotification emailNotification = new EmailNotification(userEmail);
+            AddReminder(new Reminder($"Upcoming deadline for task '{nearestIncompleteTask.Title}' on {nearestIncompleteTask.Deadline.ToShortDateString()}", emailNotification));
         }
     }
 
@@ -194,6 +241,9 @@ class Program
         Console.Write("Enter your username: ");
         string userName = Console.ReadLine();
 
+        Console.Write("Enter your email address: ");
+        string userEmail = Console.ReadLine();
+
         User user = new User(userName);
         TaskManager taskManager = new TaskManager();
 
@@ -214,7 +264,7 @@ class Program
 
         if (completedTask != null)
         {
-            taskManager.MarkTaskAsCompleted(completedTask);
+            taskManager.MarkTaskAsCompleted(completedTask, userEmail);
         }
         else
         {

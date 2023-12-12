@@ -1,30 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-// Base class representing a Task
-class Task
-{
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public Priority TaskPriority { get; set; }
-    public bool IsCompleted { get; set; } = false;
-
-    public Task(string title, string description, Priority priority)
-    {
-        Title = title;
-        Description = description;
-        TaskPriority = priority;
-    }
-
-    public virtual void DisplayTaskInfo()
-    {
-        Console.WriteLine($"Title: {Title}");
-        Console.WriteLine($"Description: {Description}");
-        Console.WriteLine($"Priority: {TaskPriority}");
-        Console.WriteLine($"Status: {(IsCompleted ? "Completed" : "Incomplete")}");
-    }
-}
-
 // Enum representing task priorities
 enum Priority
 {
@@ -33,21 +9,74 @@ enum Priority
     High
 }
 
+// Base class representing a Task
+class Task
+{
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public Priority TaskPriority { get; set; }
+    public bool IsCompleted { get; set; } = false;
+    public DateTime Deadline { get; set; } // Deadline for the task
+    public Project TaskProject { get; set; } // Reference to the project the task belongs to
+
+    public Task(string title, string description, Priority priority, DateTime deadline)
+    {
+        Title = title;
+        Description = description;
+        TaskPriority = priority;
+        Deadline = deadline;
+    }
+
+    public virtual void DisplayTaskInfo()
+    {
+        Console.WriteLine($"Title: {Title}");
+        Console.WriteLine($"Description: {Description}");
+        Console.WriteLine($"Priority: {TaskPriority}");
+        Console.WriteLine($"Status: {(IsCompleted ? "Completed" : "Incomplete")}");
+        Console.WriteLine($"Deadline: {Deadline.ToShortDateString()}");
+        if (TaskProject != null)
+        {
+            Console.WriteLine($"Project: {TaskProject.Name}");
+        }
+    }
+}
+
 // Derived class representing a ProjectTask
 class ProjectTask : Task
 {
-    public string ProjectName { get; set; }
-
-    public ProjectTask(string title, string description, Priority priority, string projectName)
-        : base(title, description, priority)
+    public ProjectTask(string title, string description, Priority priority, Project project, DateTime deadline)
+        : base(title, description, priority, deadline)
     {
-        ProjectName = projectName;
+        TaskProject = project;
+    }
+}
+
+// Class representing a Project
+class Project
+{
+    public string Name { get; set; }
+    public List<Task> Tasks { get; } = new List<Task>();
+
+    public Project(string name)
+    {
+        Name = name;
     }
 
-    public override void DisplayTaskInfo()
+    public void AddTaskToProject(Task task)
     {
-        base.DisplayTaskInfo();
-        Console.WriteLine($"Project: {ProjectName}");
+        task.TaskProject = this;
+        Tasks.Add(task);
+    }
+}
+
+// Class representing a Reminder
+class Reminder
+{
+    public string Message { get; set; }
+
+    public Reminder(string message)
+    {
+        Message = message;
     }
 }
 
@@ -55,15 +84,22 @@ class ProjectTask : Task
 class TaskManager
 {
     private List<Task> tasks;
+    private List<Reminder> reminders;
 
     public TaskManager()
     {
         tasks = new List<Task>();
+        reminders = new List<Reminder>();
     }
 
     public void AddTask(Task task)
     {
         tasks.Add(task);
+    }
+
+    public void AddReminder(Reminder reminder)
+    {
+        reminders.Add(reminder);
     }
 
     public void DisplayAllTasks()
@@ -76,13 +112,62 @@ class TaskManager
         }
     }
 
+    public void DisplayRemainingTasksWithDeadlines()
+    {
+        Console.WriteLine("Remaining Incomplete Tasks with Deadlines:");
+        foreach (var task in tasks)
+        {
+            if (!task.IsCompleted)
+            {
+                Console.WriteLine($"- {task.Title}, Deadline: {task.Deadline.ToShortDateString()}");
+            }
+        }
+    }
+
+    public void DisplayReminders()
+    {
+        Console.WriteLine("Reminders:");
+        foreach (var reminder in reminders)
+        {
+            Console.WriteLine($"{reminder.Message}");
+        }
+    }
+
     public void MarkTaskAsCompleted(Task task)
     {
         task.IsCompleted = true;
         Console.WriteLine($"Task '{task.Title}' marked as completed.");
+
+        // Find the nearest incomplete task and add a reminder
+        Task nearestIncompleteTask = FindNearestIncompleteTask();
+        if (nearestIncompleteTask != null)
+        {
+            AddReminder(new Reminder($"Upcoming deadline for task '{nearestIncompleteTask.Title}' on {nearestIncompleteTask.Deadline.ToShortDateString()}"));
+        }
     }
 
-    // Method to find a task by title
+    private Task FindNearestIncompleteTask()
+    {
+        DateTime currentDate = DateTime.Now;
+        Task nearestTask = null;
+        TimeSpan nearestTimeDifference = TimeSpan.MaxValue;
+
+        foreach (var task in tasks)
+        {
+            if (!task.IsCompleted && task.Deadline > currentDate)
+            {
+                TimeSpan timeDifference = task.Deadline - currentDate;
+                if (timeDifference < nearestTimeDifference)
+                {
+                    nearestTimeDifference = timeDifference;
+                    nearestTask = task;
+                }
+            }
+        }
+
+        return nearestTask;
+    }
+
     public Task FindTask(string title)
     {
         return tasks.Find(t => t.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
@@ -113,8 +198,11 @@ class Program
         TaskManager taskManager = new TaskManager();
 
         // Adding tasks for demonstration
-        taskManager.AddTask(new Task("Write report", "Finish the quarterly report", Priority.High));
-        taskManager.AddTask(new ProjectTask("Develop feature", "Implement new feature", Priority.Medium, "Project A"));
+        Project projectA = new Project("Project A");
+        taskManager.AddTask(new Task("Write report", "Finish the quarterly report", Priority.High, DateTime.Parse("2023-12-31")));
+        taskManager.AddTask(new ProjectTask("Develop feature", "Implement new feature", Priority.Medium, projectA, DateTime.Parse("2023-12-15")));
+        taskManager.AddTask(new Task("Test application", "Run tests on the new feature", Priority.Medium, DateTime.Parse("2023-12-20")));
+        taskManager.AddTask(new ProjectTask("Design UI", "Create user interface design", Priority.High, projectA, DateTime.Parse("2023-12-13")));
 
         Console.WriteLine("\nTasks in the Task Manager:");
         taskManager.DisplayAllTasks();
@@ -132,5 +220,11 @@ class Program
         {
             Console.WriteLine("Task not found in the task manager.");
         }
+
+        // Display remaining tasks with deadlines
+        taskManager.DisplayRemainingTasksWithDeadlines();
+
+        // Display reminders
+        taskManager.DisplayReminders();
     }
 }
